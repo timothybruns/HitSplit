@@ -1,56 +1,71 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 
 const SettingsScreen = ({ navigation }) => {
-  const [highIntensityDuration, setHighIntensityDuration] = useState('30');
-  const [restDuration, setRestDuration] = useState('30');
-  const [cycles, setCycles] = useState('5');
+  const [highIntensityDuration, setHighIntensityDuration] = useState(30);
+  const [restDuration, setRestDuration] = useState(30);
+  const [cycles, setCycles] = useState(5);
 
-  const handleNumericInput = (value, setValue) => {
-    if (value === '' || /^[0-9\b]+$/.test(value)) {
-      setValue(value);
-    }
+  const renderPickerItems = (range) => {
+    return range.map((item) => (
+      <Picker.Item key={item} label={String(item)} value={item} />
+    ));
   };
 
   return (
-    // Dismiss keyboard when tapping outside input fields
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
+        {/* High-Intensity Duration Picker */}
         <Text style={styles.label}>High-Intensity Duration (seconds):</Text>
-        <TextInput 
-          style={styles.input} 
-          value={highIntensityDuration} 
-          onChangeText={(value) => handleNumericInput(value, setHighIntensityDuration)}
-          keyboardType="numeric"
-          returnKeyType="done"
-        />
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={highIntensityDuration}
+            style={styles.picker}
+            itemStyle={styles.pickerItem}
+            onValueChange={(value) => setHighIntensityDuration(value)}
+          >
+            {renderPickerItems([...Array(121).keys()].slice(10))}
+          </Picker>
+        </View>
 
+        {/* Rest Duration Picker */}
         <Text style={styles.label}>Rest Duration (seconds):</Text>
-        <TextInput 
-          style={styles.input} 
-          value={restDuration} 
-          onChangeText={(value) => handleNumericInput(value, setRestDuration)}
-          keyboardType="numeric"
-          returnKeyType="done"
-        />
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={restDuration}
+            style={styles.picker}
+            itemStyle={styles.pickerItem}
+            onValueChange={(value) => setRestDuration(value)}
+          >
+            {renderPickerItems([...Array(121).keys()].slice(10))}
+          </Picker>
+        </View>
 
+        {/* Cycles Picker */}
         <Text style={styles.label}>Number of Cycles:</Text>
-        <TextInput 
-          style={styles.input} 
-          value={cycles} 
-          onChangeText={(value) => handleNumericInput(value, setCycles)}
-          keyboardType="numeric"
-          returnKeyType="done"
-        />
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={cycles}
+            style={styles.picker}
+            itemStyle={styles.pickerItem}
+            onValueChange={(value) => setCycles(value)}
+          >
+            {renderPickerItems([...Array(21).keys()].slice(1))}
+          </Picker>
+        </View>
 
-        <Button 
-          title="Start HIIT"
+        {/* Start HIIT Pill Button */}
+        <TouchableOpacity
+          style={styles.pillButton}
           onPress={() => navigation.navigate('Timer', {
-            highIntensityDuration: parseInt(highIntensityDuration) || 0,
-            restDuration: parseInt(restDuration) || 0,
-            cycles: parseInt(cycles) || 0
+            highIntensityDuration,
+            restDuration,
+            cycles,
           })}
-        />
+        >
+          <Text style={styles.pillButtonText}>Start HIIT</Text>
+        </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -66,14 +81,41 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     marginBottom: 10,
+    textAlign: 'center',
+    color: '#333',
   },
-  input: {
-    height: 40,
-    borderColor: 'gray',
+  pickerContainer: {
     borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
     marginBottom: 20,
-    paddingHorizontal: 10,
-    borderRadius: 5,
+    overflow: 'hidden',
+  },
+  picker: {
+    height: 150,
+    width: '100%',
+    alignSelf: 'center',
+  },
+  pickerItem: {
+    fontSize: 24,
+    height: 150,
+    color: '#333',
+  },
+  pillButton: {
+    backgroundColor: '#1e90ff',  // Blue button background color
+    paddingVertical: 12,         // Adjust vertical padding
+    paddingHorizontal: 40,       // Adjust horizontal padding for pill effect
+    borderRadius: 25,            // Rounded corners for pill shape
+    marginVertical: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '80%',                // Width for pill button appearance
+    alignSelf: 'center',
+  },
+  pillButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '600',
   },
 });
 
