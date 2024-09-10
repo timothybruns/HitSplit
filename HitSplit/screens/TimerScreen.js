@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import * as Progress from 'react-native-progress';
 import AudioCue from '../components/AudioCue';
 
@@ -8,17 +8,17 @@ const TimerScreen = ({ route, navigation }) => {
   const [currentCycle, setCurrentCycle] = useState(1);
   const [isHighIntensity, setIsHighIntensity] = useState(true);
   const [timer, setTimer] = useState(highIntensityDuration);
-  const [progress, setProgress] = useState(1);  // Start with full progress (1)
-  const [isPaused, setIsPaused] = useState(false); // New state for pause/play
+  const [progress, setProgress] = useState(1);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     if (timer === 0) {
       if (isHighIntensity) {
         setTimer(restDuration);
-        setProgress(1);  // Reset progress to full
+        setProgress(1);
       } else {
         setTimer(highIntensityDuration);
-        setProgress(1);  // Reset progress to full
+        setProgress(1);
         setCurrentCycle(currentCycle + 1);
       }
       setIsHighIntensity(!isHighIntensity);
@@ -33,7 +33,7 @@ const TimerScreen = ({ route, navigation }) => {
       const interval = setInterval(() => {
         setTimer((prev) => prev - 1);
         const duration = isHighIntensity ? highIntensityDuration : restDuration;
-        setProgress((timer - 1) / duration);  // Update progress to decrease
+        setProgress((timer - 1) / duration);
       }, 1000);
 
       return () => clearInterval(interval);
@@ -41,75 +41,112 @@ const TimerScreen = ({ route, navigation }) => {
   }, [timer, isHighIntensity, currentCycle, isPaused]);
 
   const togglePause = () => {
-    setIsPaused(!isPaused);  // Toggle pause state
+    setIsPaused(!isPaused);
   };
 
   return (
-    <View style={styles.container}>
-      <Progress.Circle
-        size={300}
-        progress={progress}  // Countdown effect with clockwise motion
-        showsText={true}
-        formatText={() => `${timer}s`}
-        color={isHighIntensity ? '#ff6347' : '#1e90ff'}
-        thickness={10}
-        textStyle={styles.timerText}
-        strokeCap="round"
-        borderWidth={0}
-        scaleY={-1}  // Ensures clockwise motion
-      />
-      <Text style={styles.statusText}>
-        {isHighIntensity ? 'High Intensity' : 'Rest'}
-      </Text>
-      <Text style={styles.cycleText}>Cycle: {currentCycle}/{cycles}</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <Progress.Circle
+          size={280}
+          progress={progress}
+          showsText={true}
+          formatText={() => `${timer}`}
+          color={isHighIntensity ? '#ff9500' : '#4cd964'}
+          thickness={6}
+          textStyle={styles.timerText}
+          strokeCap="round"
+          borderWidth={0}
+          scaleY={-1}
+          unfilledColor="#333333"
+        />
+        <Text style={styles.statusText}>
+          {isHighIntensity ? 'High Intensity' : 'Rest'}
+        </Text>
+        <Text style={styles.cycleText}>Cycle {currentCycle} of {cycles}</Text>
 
-      {/* Custom Pill-Shaped Pause/Play Button */}
-      <TouchableOpacity style={styles.pillButton} onPress={togglePause}>
-        <Text style={styles.buttonText}>{isPaused ? 'Resume' : 'Pause'}</Text>
-      </TouchableOpacity>
-
-      {/* Custom Pill-Shaped Stop Button */}
-      <TouchableOpacity style={styles.pillButton} onPress={() => navigation.navigate('Settings')}>
-        <Text style={styles.buttonText}>Stop</Text>
-      </TouchableOpacity>
-    </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity 
+            style={[styles.button, styles.cancelButton]} 
+            onPress={() => navigation.navigate('Settings')}
+          >
+            <Text style={[styles.buttonText, styles.cancelButtonText]}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.button, styles.mainButton]} 
+            onPress={togglePause}
+          >
+            <Text style={[styles.buttonText, styles.mainButtonText]}>
+              {isPaused ? 'Resume' : 'Pause'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#000',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#000',
+    paddingBottom: 50,
   },
   timerText: {
-    fontSize: 36,
-    color: '#333',
+    fontSize: 80,
+    fontWeight: '200',
+    color: '#fff',
   },
   statusText: {
     fontSize: 24,
     marginTop: 20,
     marginBottom: 10,
-    color: '#666',
+    color: '#fff',
+    fontWeight: '600',
   },
   cycleText: {
-    fontSize: 18,
-    color: '#333',
+    fontSize: 20,
+    color: '#8e8e93',
     marginBottom: 40,
   },
-  pillButton: {
-    backgroundColor: '#1e90ff',  // Button background color
-    paddingVertical: 10,
-    paddingHorizontal: 40,
-    borderRadius: 25,  // Rounded corners for pill shape
-    marginVertical: 10,
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 20,
+    position: 'absolute',
+    bottom: 40,
+  },
+  button: {
+    padding: 15,
+    borderRadius: 50,
+    width: 90,  // Increased width
+    height: 90, // Increased height
+    justifyContent: 'center',
     alignItems: 'center',
   },
   buttonText: {
-    fontSize: 18,
-    color: '#fff',  // Button text color
-    fontWeight: 'bold',
+    fontSize: 14, // Reduced font size
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  cancelButton: {
+    backgroundColor: '#2c2c2e',
+  },
+  cancelButtonText: {
+    color: '#ff453a',
+  },
+  mainButton: {
+    backgroundColor: '#ff9500',
+  },
+  mainButtonText: {
+    color: '#000',
   },
 });
 

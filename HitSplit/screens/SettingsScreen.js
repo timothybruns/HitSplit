@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, TouchableOpacity, SafeAreaView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 const SettingsScreen = ({ navigation }) => {
@@ -14,108 +14,107 @@ const SettingsScreen = ({ navigation }) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        {/* High-Intensity Duration Picker */}
-        <Text style={styles.label}>High-Intensity Duration (seconds):</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={highIntensityDuration}
-            style={styles.picker}
-            itemStyle={styles.pickerItem}
-            onValueChange={(value) => setHighIntensityDuration(value)}
-          >
-            {renderPickerItems([...Array(121).keys()].slice(10))}
-          </Picker>
-        </View>
+    <SafeAreaView style={styles.safeArea}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          {/* High-Intensity Duration Picker */}
+          <Text style={styles.label}>High-Intensity</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={highIntensityDuration}
+              style={styles.picker}
+              itemStyle={styles.pickerItem}
+              onValueChange={(value) => setHighIntensityDuration(value)}
+            >
+              {renderPickerItems([...Array(121).keys()].slice(10))}
+            </Picker>
+          </View>
 
-        {/* Rest Duration Picker */}
-        <Text style={styles.label}>Rest Duration (seconds):</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={restDuration}
-            style={styles.picker}
-            itemStyle={styles.pickerItem}
-            onValueChange={(value) => setRestDuration(value)}
-          >
-            {renderPickerItems([...Array(121).keys()].slice(10))}
-          </Picker>
-        </View>
+          {/* Rest Duration Picker */}
+          <Text style={styles.label}>Rest</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={restDuration}
+              style={styles.picker}
+              itemStyle={styles.pickerItem}
+              onValueChange={(value) => setRestDuration(value)}
+            >
+              {renderPickerItems([...Array(121).keys()].slice(10))}
+            </Picker>
+          </View>
 
-        {/* Cycles Picker */}
-        <Text style={styles.label}>Number of Cycles:</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={cycles}
-            style={styles.picker}
-            itemStyle={styles.pickerItem}
-            onValueChange={(value) => setCycles(value)}
-          >
-            {renderPickerItems([...Array(21).keys()].slice(1))}
-          </Picker>
-        </View>
+          {/* Cycles Picker */}
+          <Text style={styles.label}>Cycles</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={cycles}
+              style={styles.picker}
+              itemStyle={styles.pickerItem}
+              onValueChange={(value) => setCycles(value)}
+            >
+              {renderPickerItems([...Array(21).keys()].slice(1))}
+            </Picker>
+          </View>
 
-        {/* Start HIIT Pill Button */}
-        <TouchableOpacity
-          style={styles.pillButton}
-          onPress={() => navigation.navigate('Timer', {
-            highIntensityDuration,
-            restDuration,
-            cycles,
-          })}
-        >
-          <Text style={styles.pillButtonText}>Start HIIT</Text>
-        </TouchableOpacity>
-      </View>
-    </TouchableWithoutFeedback>
+          {/* Start HIIT Button */}
+          <TouchableOpacity
+            style={styles.startButton}
+            onPress={() => navigation.navigate('Timer', {
+              highIntensityDuration,
+              restDuration,
+              cycles,
+            })}
+          >
+            <Text style={styles.startButtonText}>Start</Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#000',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#000',
   },
   label: {
-    fontSize: 18,
-    marginBottom: 10,
+    fontSize: 20,
+    marginBottom: 5,
     textAlign: 'center',
-    color: '#333',
+    color: '#fff',
+    fontWeight: '600',
   },
   pickerContainer: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 10,
-    marginBottom: 20,
-    overflow: 'hidden',
+    marginBottom: 30,
   },
   picker: {
-    height: 150,
-    width: '100%',
-    alignSelf: 'center',
+    backgroundColor: '#1c1c1e',
+    color: '#fff',
   },
   pickerItem: {
     fontSize: 24,
     height: 150,
-    color: '#333',
+    color: '#fff',
   },
-  pillButton: {
-    backgroundColor: '#1e90ff',  // Blue button background color
-    paddingVertical: 12,         // Adjust vertical padding
-    paddingHorizontal: 40,       // Adjust horizontal padding for pill effect
-    borderRadius: 25,            // Rounded corners for pill shape
-    marginVertical: 10,
+  startButton: {
+    backgroundColor: '#ff9500',
+    paddingVertical: 16,
+    borderRadius: 12,
+    marginTop: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '80%',                // Width for pill button appearance
-    alignSelf: 'center',
   },
-  pillButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
+  startButtonText: {
+    color: '#000',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
 
