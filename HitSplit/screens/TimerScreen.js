@@ -5,11 +5,34 @@ import AudioCue from '../components/AudioCue';
 
 const TimerScreen = ({ route, navigation }) => {
   const { highIntensityDuration, restDuration, cycles } = route.params;
+  const highIntensityDurationNum = Number(highIntensityDuration);
+  const restDurationNum = Number(restDuration);
   const [currentCycle, setCurrentCycle] = useState(1);
   const [isHighIntensity, setIsHighIntensity] = useState(true);
   const [timer, setTimer] = useState(highIntensityDuration);
   const [progress, setProgress] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
+
+    // Add console logs here to verify the passed parameters
+    useEffect(() => {
+      console.log('highIntensityDuration:', highIntensityDuration);
+      console.log('restDuration:', restDuration);
+      console.log('cycles:', cycles);
+  
+      // Add logs for each step of the calculation
+      const totalSecondsPerCycle = highIntensityDuration + restDuration;
+      console.log('Total seconds per cycle:', totalSecondsPerCycle);
+  
+      const totalSecondsAllCycles = totalSecondsPerCycle * cycles;
+      console.log('Total seconds for all cycles:', totalSecondsAllCycles);
+  
+      const totalWorkoutTime = Math.ceil(totalSecondsAllCycles / 60);
+      console.log('Total workout time in minutes:', totalWorkoutTime);
+    }, []);
+
+  // Calculate total workout time in minutes
+  const totalWorkoutTime = Math.ceil((((highIntensityDurationNum + restDurationNum)) * cycles / 60));
+
 
   useEffect(() => {
     if (timer === 0) {
@@ -60,6 +83,7 @@ const TimerScreen = ({ route, navigation }) => {
           scaleY={-1}
           unfilledColor="#333333"
         />
+        <Text style={styles.totalTimeText}>Total workout time: {totalWorkoutTime} min</Text>
         <Text style={styles.statusText}>
           {isHighIntensity ? 'High Intensity' : 'Rest'}
         </Text>
@@ -103,6 +127,12 @@ const styles = StyleSheet.create({
     fontWeight: '200',
     color: '#fff',
   },
+  totalTimeText: {
+    fontSize: 16,
+    color: '#8e8e93',
+    marginTop: 10,
+    marginBottom: 20,
+  },
   statusText: {
     fontSize: 24,
     marginTop: 20,
@@ -126,13 +156,13 @@ const styles = StyleSheet.create({
   button: {
     padding: 15,
     borderRadius: 50,
-    width: 90,  // Increased width
-    height: 90, // Increased height
+    width: 90,
+    height: 90,
     justifyContent: 'center',
     alignItems: 'center',
   },
   buttonText: {
-    fontSize: 14, // Reduced font size
+    fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
   },
