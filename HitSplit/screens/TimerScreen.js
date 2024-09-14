@@ -13,23 +13,6 @@ const TimerScreen = ({ route, navigation }) => {
   const [progress, setProgress] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
 
-    // Add console logs here to verify the passed parameters
-    useEffect(() => {
-      console.log('highIntensityDuration:', highIntensityDuration);
-      console.log('restDuration:', restDuration);
-      console.log('cycles:', cycles);
-  
-      // Add logs for each step of the calculation
-      const totalSecondsPerCycle = highIntensityDuration + restDuration;
-      console.log('Total seconds per cycle:', totalSecondsPerCycle);
-  
-      const totalSecondsAllCycles = totalSecondsPerCycle * cycles;
-      console.log('Total seconds for all cycles:', totalSecondsAllCycles);
-  
-      const totalWorkoutTime = Math.ceil(totalSecondsAllCycles / 60);
-      console.log('Total workout time in minutes:', totalWorkoutTime);
-    }, []);
-
   // Calculate total workout time in minutes
   const totalWorkoutTime = Math.ceil((((highIntensityDurationNum + restDurationNum)) * cycles / 60));
 

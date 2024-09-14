@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, TouchableOp
 import { Picker } from '@react-native-picker/picker';
 
 const SettingsScreen = ({ navigation }) => {
-  const [highIntensityDuration, setHighIntensityDuration] = useState(30);
-  const [restDuration, setRestDuration] = useState(30);
+  const [highIntensityDuration, setHighIntensityDuration] = useState(60);
+  const [restDuration, setRestDuration] = useState(60);
   const [cycles, setCycles] = useState(5);
 
   const renderPickerItems = (range) => {
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ff9500',
     paddingVertical: 16,
     borderRadius: 12,
-    marginTop: 30,
+    marginTop: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
